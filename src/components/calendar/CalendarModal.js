@@ -3,6 +3,9 @@ import Modal from 'react-modal';
 import DateTimePicker from 'react-datetime-picker';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { useSelector, useDispatch } from 'react-redux';
+import { uiCloseModal } from '../../actions/ui';
+import { eventAddNew } from '../../actions/events';
 
 const customStyles = {
     content: {
@@ -22,6 +25,8 @@ const nowPlus1 = moment().clone().add(1, 'hours');
 
 export const CalendarModal = () => {
 
+    const dispatch = useDispatch();
+    const { modalOpen } = useSelector(state => state.ui);
 
     const [dateStart, setDateStart] = useState(now.toDate());
     const [dateEnd, setDateEnd] = useState(nowPlus1.toDate());
@@ -34,9 +39,9 @@ export const CalendarModal = () => {
         end: nowPlus1.toDate()
     });
 
-    const {title, notes, start, end} = formValues;
+    const { title, notes, start, end } = formValues;
 
-    const handleInputChange = ({target}) => {
+    const handleInputChange = ({ target }) => {
         setFormValues({
             ...formValues,
             [target.name]: target.value
@@ -44,7 +49,7 @@ export const CalendarModal = () => {
     }
 
     const closeModal = () => {
-        console.log('cerrando...');
+        dispatch(uiCloseModal());
     }
 
     const handleStartDateChange = (e) => {
@@ -63,29 +68,38 @@ export const CalendarModal = () => {
         });
     }
 
-    const handleSubmitForm = (e) =>{
+    const handleSubmitForm = (e) => {
         e.preventDefault();
-        
+
         const momentStart = moment(start);
         const momentEnd = moment(end);
 
-        if(momentStart.isSameOrAfter(momentEnd)){
+        if (momentStart.isSameOrAfter(momentEnd)) {
             Swal.fire('Error', 'La fecha fin debe ser mayor a la de inicio', 'error');
             return;
         }
 
-        if(title.trim().length < 2){
+        if (title.trim().length < 2) {
             return setTitleValid(false);
         }
 
         setTitleValid(true);
         closeModal();
 
+        dispatch(eventAddNew({
+            ...formValues,
+            id: new Date().getTime(),
+            user: {
+                _id: '123',
+                name: 'Sebastian'
+            }
+        }));
+
     }
 
     return (
         <Modal
-            isOpen={true}
+            isOpen={modalOpen}
             onRequestClose={closeModal}
             style={customStyles}
             closeTimeoutMS={200}
@@ -94,7 +108,7 @@ export const CalendarModal = () => {
         >
             <h1> Nuevo evento </h1>
             <hr />
-            <form 
+            <form
                 className="container"
                 onSubmit={handleSubmitForm}>
 

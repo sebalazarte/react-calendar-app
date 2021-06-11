@@ -8,6 +8,10 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { messages } from '../../helpers/calendar-messages-es';
 import { CalendarEvent } from './CalendarEvent';
 import { CalendarModal } from './CalendarModal';
+import { useDispatch } from 'react-redux';
+import { uiOpenModal } from '../../actions/ui';
+import { eventSetActive } from '../../actions/events';
+import { AddNewFab } from '../ui/AddNewFab';
 
 moment.locale('es');
 
@@ -28,13 +32,15 @@ const events = [{
 export const CalendarScreen = () => {
 
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month');
+    const dispatch = useDispatch();
 
-    const onDobleClick = (e) => {
-        console.log(e);
+    const onDoubleClickEvent = (e) => {
+        
     }
 
     const onSelectEvent = (e) => {
-        console.log(e);
+        dispatch(uiOpenModal());
+        dispatch(eventSetActive(e));
     }
 
     const onViewChange = (e) => {
@@ -67,7 +73,7 @@ export const CalendarScreen = () => {
                 endAccessor="end"
                 messages={messages}
                 eventPropGetter={eventStyleGetter}
-                onDoubleClickEvent={onDobleClick}
+                onDoubleClickEvent={onDoubleClickEvent}
                 onSelectEvent={onSelectEvent}
                 onView={onViewChange}
                 view={lastView}
@@ -75,7 +81,8 @@ export const CalendarScreen = () => {
                     event: CalendarEvent
                 }}
             />
-            <CalendarModal/>
+            <AddNewFab />
+            <CalendarModal />
         </div>
     )
 }
