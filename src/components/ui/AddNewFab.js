@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { uiOpenModalParams } from '../../actions/ui';
+import { uiOpenModal } from '../../actions/ui';
 
 export const AddNewFab = () => {
 
@@ -11,7 +11,7 @@ export const AddNewFab = () => {
         const now = moment().minute(0).seconds(0).add(1, 'hours').toDate();
         const nowPlus1 = moment().clone().add(1, 'hour').toDate();
 
-        dispatch(uiOpenModalParams(now, nowPlus1));
+        dispatch(uiOpenModal(now, nowPlus1));
     }
 
     return (

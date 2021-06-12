@@ -9,7 +9,7 @@ import { messages } from '../../helpers/calendar-messages-es';
 import { CalendarEvent } from './CalendarEvent';
 import { CalendarModal } from './CalendarModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { uiOpenModal, uiOpenModalParams } from '../../actions/ui';
+import { uiOpenModal } from '../../actions/ui';
 import { eventClearActive, eventSetActive } from '../../actions/events';
 import { AddNewFab } from '../ui/AddNewFab';
 import { DeleteEventFab } from '../ui/DeleteEventFab';
@@ -25,7 +25,7 @@ export const CalendarScreen = () => {
     const { events, activeEvent } = useSelector(state => state.calendar);
 
     const onDoubleClickEvent = (e) => {
-        dispatch(uiOpenModal());
+        dispatch(uiOpenModal(e.start, e.end));
     }
 
     const onSelectEvent = (e) => {
@@ -60,7 +60,7 @@ export const CalendarScreen = () => {
 
         if(action === "doubleClick"){
             const end = moment(start).add(1, 'hours').toDate();
-            dispatch(uiOpenModalParams(start, end));
+            dispatch(uiOpenModal(start, end));
         }
     }
 
